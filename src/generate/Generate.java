@@ -1,11 +1,12 @@
 package generate;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Clase Generadora:
- * Genera Nombres y ruts de forma aleatoria
+ * Clase Generadora: Genera Nombres y ruts de forma aleatoria
+ *
  * @version 1.0.1
  * @author Diego Garrido
  */
@@ -24,15 +25,34 @@ public class Generate {
     }
 
     /**
-     * Nombres
-     * @param cant Cantidad a generar
-     * @return ArrayList conteniendo los nombres en formato "Apellido Nombre". Sin repetidos
-     * ordenados alfabéticamente
+     * Nombres 
+     * 
+     * Creada para mayor comodidad, invoca al método
+     * nombres con sexos en False.
+     *
+     * @param cant Cantidad a generar.
+     * @return ArrayList conteniendo los nombres en formato "Apellido Nombre".
+     * Sin repetidos ordenados alfabéticamente
      */
     public ArrayList<String> nombres(int cant) {
+        return nombres(cant, false);
+    }
+
+    /**
+     * Nombres
+     *
+     * @param cant Cantidad a generar.
+     * @param sexos "True" si se quiere agregar sexo al final del nombre, False
+     * por defecto.
+     * @return ArrayList conteniendo los nombres en formato "Apellido Nombre".
+     * Sin repetidos ordenados alfabéticamente, con el género correspondiente al
+     * final delimitado por " - ".
+     */
+    public ArrayList<String> nombres(int cant, boolean sexos) {
         ArrayList<String> nomb = new ArrayList();
         //agregar mas nombres y apellidos para obtener mas variedad
         String[] nombres = new String[]{"Pedro", "Juan", "Diego", "Alberto", "Pablo", "Manuel", "Lorenzo", "Roberto", "Adrian", "Ana", "Martina", "Diana", "Carlos", "Daniel", "Arturo", "Alexis", "Belen", "Camila", "Daniela", "Valentina", "Sofia", "Florencia", "Francisca", "Francisco", "Isidora", "Catalina", "Agustina", "Agustin", "Gonzalo", "Paz", "Rocio", "Julieta", "Renata", "Matilda", "Benjamin", "Vicente", "Martin", "Joaquin", "Jose", "Paulina", "Lucas", "Mateo", "Javier", "Emilio", "Santiago", "Esteban", "David"};
+        String[] generos = new String[]{"M", "M", "M", "M", "M", "M", "M", "M", "M", "F", "F", "F", "M", "M", "M", "M", "F", "F", "F", "F", "F", "F", "F", "M", "F", "F", "F", "M", "M", "F", "F", "F", "F", "F", "M", "M", "M", "M", "M", "F", "M", "M", "M", "M", "M", "M", "M"};
         String[] apellidos = new String[]{"Rodriguez", "Garrido", "Martines", "Rojas", "Plaza", "Toledo", "Ortiz", "Zapata", "Fierro", "Suazo", "Zuniga", "Ovalle", "Sanhueza", "Obreque", "Aguero", "Gonzales", "Munoz", "Diaz", "Vazques", "Perez", "Soto", "Contreras", "Lopez", "Mora", "Morales", "Fuentes", "Valenzuela", "Araya", "Sepulveda", "Espinoza", "Torres", "Castillo", "Castro", "Chavez", "Bravo", "Gomez", "Iturria", "Pereira", "Salinas", "Sanchez", "Ruiz", "Tapia", "Carrasco", "Cortes", "Vergara", "Oliveros", "Riquelme", "Salazar", "Parra", "Medina"};
         String exist = "";
         for (int i = 0; i < cant; i++) {
@@ -42,7 +62,11 @@ public class Generate {
                 nom = (int) (Math.random() * (nombres.length));
                 ape = (int) (Math.random() * (apellidos.length));
             } while (exist.contains(nom + "," + ape));
-            nomb.add(apellidos[ape] + " " + nombres[nom]);
+            if (sexos) {
+                nomb.add(apellidos[ape] + " " + nombres[nom]+"-"+generos[nom]);
+            } else {
+                nomb.add(apellidos[ape] + " " + nombres[nom]);
+            }
             exist += nom + "," + ape + " ";
         }
         Collections.sort(nomb);
@@ -51,6 +75,7 @@ public class Generate {
 
     /**
      * Ruts
+     *
      * @param cant Cantidad a generar
      * @return ArrayList conteniendo los ruts con putnos y guión. Sin repetidos
      * ordenados alfabéticamente
@@ -109,5 +134,34 @@ public class Generate {
             }
         }
         return ruts;
+    }
+
+    /**
+     * Fechas
+     * Crear fechas aleatorias, con el formato AA-MM-DD validadas para que existan.
+     * El año máximo debe ser mayor que el mínimo.
+     * Ej. fechas (50,1938,1998) Creará fechas desde 1938 hasta 1998.
+     * @param cant Cantidad a generar.
+     * @param min Año mínimo del que crear las fechas
+     * @param max Año máximo del que crear las fechas
+     * @return
+     */
+    public ArrayList<String> fechas(int cant, int min, int max) {
+        ArrayList<String> fechas = new ArrayList();
+        for (int i = 0; i < cant; i++) {
+            int a = (int) (max - (Math.random() * (max-min)) );
+            int m = (int) (Math.random() * 12);
+            int d;
+            if (m % 2 == 0) {
+                d = (int) (Math.random() * 30) + 1;
+            } else {
+                d = (int) (Math.random() * 31) + 1;
+            }
+            if (a % 4 == 0 && m == 2) {
+                d = (int) (Math.random() * 29) + 1;
+            }
+            fechas.add(a + "-" + m + "-" + d);
+        }
+        return fechas;
     }
 }
